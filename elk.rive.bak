@@ -1,0 +1,71 @@
+! version = 2.0
+
++ hello bot
+- Hello human.
+
++ my name is *
+- <set name=<formal>>Nice to meet you, <get name>.
+
++ (what is my name|who am i)
+- You're <get name>, right?
+
++ *
+- I don't have a reply for that.
+- Try asking that a different way.
+
+> object await-me javascript
+	var timeout = args[0];
+	var message = args[1];
+
+	// Example of an asynchronous object macro which returns a promise instead
+	// of a string.
+	return new Promise(function(resolve, reject) {
+		setTimeout(function() {
+			resolve(message);
+		}, timeout*1000);
+	});
+< object
++ wait # seconds
+- <call>await-me <star> "You waited <star> seconds for this response!"</call>
+
+
++ hello
+- <call>sendData</call>
+
+> object sendData javascript
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos/1');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            return ('content ' + xhr.responseText);
+        }
+        else {
+            alert('Request failed.  Returned status of ' + xhr.status);
+        }
+    };
+    xhr.send();
+    
+< object
+
+
+
+> object getData javascript
+	return new rs.Promise(function(resolve, reject) {
+             var xhr = new XMLHttpRequest();
+             xhr.open('GET', 'http://localhost:9200/_search?q=api');
+             xhr.onload = function() {
+              alert(xhr.status
+             if (xhr.status === 200) {
+                 resolve(xhr.responseText);
+              }
+             else {
+               alert('Request failed.  Returned status of ' + xhr.status);
+               }
+              };
+             xhr.send();
+	});
+< object
+
++ get data
+- Here you go: <call>getData</call>
+
