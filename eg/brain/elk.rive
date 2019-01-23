@@ -100,3 +100,32 @@
     var x = args[0] +' '+ args[1] +' '+ args[2]
     return(x)
 < object
+
+
+
+
+> object get_elk_data javascript
+var payload = {
+   query:{
+      bool:{
+        must:{
+         term:{api:args[0]}
+             },
+         must_not:{
+          term:{topic:args[1]}
+              }     
+} 
+}
+};
+
+var data = new FormData();
+data.append( "json", JSON.stringify( payload ) );
+
+fetch("/echo/json/",
+{
+    method: "POST",
+    body: data
+})
+.then(function(res){ return res.json(); })
+.then(function(data){ alert( JSON.stringify( data ) ) })
+< object
