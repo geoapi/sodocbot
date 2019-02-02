@@ -6,12 +6,10 @@
 + my name is *
 - <set name=<formal>>Nice to meet you, <get name>.
 
-+ (what is my name|who am i)
-- You're <get name>, right?
 
 + *
 - I don't have a reply for that.
-- Try asking that a different way.
+- Try asking that a different way. I am designed to tell things about API Topics e.g. get posts for facebook api
 
 > object await-me javascript
 	var timeout = args[0];
@@ -40,6 +38,17 @@
 
 + get posts for api *
 - <call>sendData <star> </call>
+
++ get me posts for * api
+- <call>sendData <star> </call>
+
++ get me posts for api *
+- <call>sendData <star> </call>
+
+
++ return posts for * api
+- <call>sendData <star> </call>
+
 
 > object sendData javascript
     var xhr = new XMLHttpRequest();
@@ -72,9 +81,6 @@
 + my api is *
 - <set apiname=<formal>> Many users use <get apiname> 
 
-+ i bought a new *
-- Oh? What color is your new <star>?
-
 
 > object getStats javascript
     var xhr = new XMLHttpRequest();
@@ -101,31 +107,59 @@
     return(x)
 < object
 
-
-
-
++ get posts for * api related to * topic
+- <call>  get_elk_data <star1> <star2> </call>
 > object get_elk_data javascript
-var payload = {
-   query:{
-      bool:{
-        must:{
-         term:{api:args[0]}
-             },
-         must_not:{
-          term:{topic:args[1]}
-              }     
-} 
-}
-};
 
-var data = new FormData();
-data.append( "json", JSON.stringify( payload ) );
+var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
+//return JSON.stringify(payload)
+var xmlhttp = new XMLHttpRequest();
+var url = "http://35.244.98.50:9200/question/so/_search"
+//return url+ JSON.stringify(payload)
+xmlhttp.open("POST", url,true);
+xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+xmlhttp.onload = function() {
+        if (xmlhttp.status === 200) {
+	   console.debug(xmlhttp.responseText)        
+           return('content ' + xmlhttp.responseText);
+        }
+        else {
+          console.debug(xmlhttp.status)           
+ return('Request failed.  Returned status of ' + xmlhttp.status);
+	   
+        }
+    };
+var data = JSON.stringify( payload );
+console.debug(data)
+xmlhttp.send(data);
 
-fetch("/echo/json/",
-{
-    method: "POST",
-    body: data
-})
-.then(function(res){ return res.json(); })
-.then(function(data){ alert( JSON.stringify( data ) ) })
+< object
+
+//it works!
++ test
+- <call>test</call>
+> object test javascript
+
+const proxyurl = "https://cors.io/?";
+const url = "http://35.244.98.50:9200/question/so/_search";
+
+fetch(proxyurl + url) 
+.then(response => response.text())
+.then(contents => alert(contents))
+.catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+< object
+
+
++ test2 * and *
+- <call>test2</call>
+> object test2 javascript
+
+const proxyurl = "https://cors.io/?";
+const url = "http://35.244.98.50:9200/question/so/_search";
+var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
+console.log(payload)
+fetch(proxyurl+url,{method:'post',mode: 'no-cors',headers:{'Accept': 'application/json,'Content-Type': 'application/json'}, body: JSON.stringify(payload)}) 
+.then(response =>  console.log(response.text()))
+.then(contents => console.log(contents))
+.catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
 < object
