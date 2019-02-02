@@ -100,40 +100,33 @@
    //return('Ok, see the popup')
 < object
 
-+ check it for me
--<call>chkStats <get apiname> <get topicname></call>
-> object chkStats javascript
-    var x = args[0] +' '+ args[1] +' '+ args[2]
-    return(x)
-< object
-
+// ok for alert
 + get posts for * api related to * topic
-- <call>  get_elk_data <star1> <star2> </call>
-> object get_elk_data javascript
-
+- <call> jquery1 <star1> <star2> </call>
+> object jquery1 javascript
 var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
-//return JSON.stringify(payload)
-var xmlhttp = new XMLHttpRequest();
-var url = "http://35.244.98.50:9200/question/so/_search"
-//return url+ JSON.stringify(payload)
-xmlhttp.open("POST", url,true);
-xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-xmlhttp.onload = function() {
-        if (xmlhttp.status === 200) {
-	   console.debug(xmlhttp.responseText)        
-           return('content ' + xmlhttp.responseText);
-        }
-        else {
-          console.debug(xmlhttp.status)           
- return('Request failed.  Returned status of ' + xmlhttp.status);
-	   
-        }
-    };
-var data = JSON.stringify( payload );
-console.debug(data)
-xmlhttp.send(data);
-
+jQuery.support.cors = true;
+// execute request
+$.ajax({
+    type: "POST",
+    url: "http://35.244.98.50:9200/question/so/_search",
+    data: JSON.stringify(payload), // elastic filter
+    dataType: "json",
+    contentType: "application/json;charset=UTF-8",
+    processData: false,
+    success: function(data) {
+        //console.log(data),
+       alert(JSON.stringify(data))
+        
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+    }
+});
 < object
+
+
+
 
 //it works!
 + test
@@ -150,16 +143,72 @@ fetch(proxyurl + url)
 < object
 
 
-+ test2 * and *
-- <call>test2</call>
-> object test2 javascript
+// CORS PROBLEMS! 405 error
++ fetch * and *
+- <call>fetch <star1> <star2> </call>
+> object fetch javascript
 
 const proxyurl = "https://cors.io/?";
 const url = "http://35.244.98.50:9200/question/so/_search";
 var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
-console.log(payload)
-fetch(proxyurl+url,{method:'post',mode: 'no-cors',headers:{'Accept': 'application/json,'Content-Type': 'application/json'}, body: JSON.stringify(payload)}) 
-.then(response =>  console.log(response.text()))
-.then(contents => console.log(contents))
+console.log(payload);
+fetch(proxyurl + url, {
+    method: 'post',
+    body: JSON.stringify(payload)
+  },{mode: 'cors'})
+.then(response => response.text())
+.then(contents => alert(contents))
 .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+< object
+
+//this works perfectly with no cors or whatsover , Ya Shakoor
++ jquery * and *
+- <call> jquery <star1> <star2> </call>
+> object jquery javascript
+var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
+jQuery.support.cors = true;
+// execute request
+$.ajax({
+    type: "POST",
+    url: "http://35.244.98.50:9200/question/so/_search",
+    data: JSON.stringify(payload), // elastic filter
+    dataType: "json",
+    contentType: "application/json;charset=UTF-8",
+    processData: false,
+    success: function(data) {
+        console.log(data),
+	alert(JSON.stringify(data))
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+        console.log(xhr);
+    }
+});
+< object
+
++ get posts for * api and * topic
+- <call> jquery2 <star1> <star2> </call>
+> object jquery2 javascript
+var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
+jQuery.support.cors = true;
+
+function getdata(payload){
+ return $.ajax({
+    type: "POST",
+    url: "http://35.244.98.50:9200/question/so/_search",
+    data: JSON.stringify(payload), // elastic filter
+    dataType: "json",
+    contentType: "application/json;charset=UTF-8"})
+//  ,async: false
+}
+
+
+function callGetData(payload){
+var content = getdata(payload);
+content.done(function(data){
+alert(JSON.stringify(data))
+});
+}
+
+callGetData(payload)
+return ('ok')
 < object
