@@ -66,3 +66,46 @@ request('http://jsonplaceholder.typicode.com/todos', { json: true }, (err, res, 
 })});
 < object
 
+
+
+//this works well for retrieving 3 posts TODO Add link to all ???
++ get posts for * api
+- <call>sendData1 <star> </call>
+
++ get posts for api *
+- <call>sendData1 <star> </call>
+
+> object sendData1 javascript
+  const axios = require('axios');
+  var url = 'http://35.244.98.50:9200/question/so/_search?q=api:'+ args[0];
+
+  return new Promise(function(resolve, reject){
+   axios.get(url)
+    .then(response =>{
+         var total =response.data['hits']['total'];
+         var i =0;
+        var results = "";
+        for (i =0; i <=2; i++){
+         var d1_title = response.data['hits']['hits'][i]['_source']['title'];
+         var d1_body = response.data['hits']['hits'][i]['_source']['body'].slice(0, 200);
+         var link = ' *_see the post_* : <https://www.stackoverflow.com/questions/'+response.data['hits']['hits'][i]['_source']['question_id']+' > \n ';
+         var api = response.data['hits']['hits'][i]['_source']['api'];
+         var topic =  response.data['hits']['hits'][i]['_source']['topic'].slice(0,5 );
+         var results = results +'*>'+d1_title+'*\n'+'>'+d1_body + link +'\n `TOPIC `'+topic + '   `API `'+ api + '\n';  
+          }
+         var result = 'found total number of :*'+total+'* see few samples below: \n' + results;
+        resolve(result)})
+ //+d1_body+'\n')})
+    .catch(error => reject(error))
+  });
+
+ // axios.get(url)
+   // .then(function (response) {
+    //  var total =response.data['hits']['total'];
+  //    var re = {"text":"Total hits found :"+total}
+  //   return('ok');
+  //  })
+  //  .catch(function (error) {
+  //console.log(error)
+//});
+< object
