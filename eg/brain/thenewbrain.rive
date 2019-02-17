@@ -1,0 +1,68 @@
++ get posts for api *
+- <call>sendData1 <star> </call>
+
+> object sendData1 javascript
+  const axios = require('axios');
+  var url = 'http://35.244.98.50:9200/question/so/_search?q=api:'+ args[0];
+
+  return new Promise(function(resolve, reject){
+   axios.get(url)
+    .then(response =>{
+         var total =response.data['hits']['total']; 
+         var d1 = JSON.stringify(response.data['hits']['hits'][0]['_source']['title']);
+         resolve('found total number of :'+total+'\n'+d1)})
+    .catch(error => reject(error))
+  });
+
+ // axios.get(url)
+   // .then(function (response) {
+    //  var total =response.data['hits']['total'];
+  //    var re = {"text":"Total hits found :"+total}
+  //   return('ok');
+  //  })
+  //  .catch(function (error) {
+  //console.log(error)
+//});
+< object
+
++ test
+- <call> test</call>
+> object test javascript
+const request = require('request');
+
+return new Promise(function(resolve,reject){
+request('http://jsonplaceholder.typicode.com/todos', { json: true }, (err, res, body) => {
+  if (err) { reject(err); }
+  let str = "- here are some results:\n";
+  var i =0
+  for (i = 0; i < body.length; i ++){
+   str = str +"*"+ body[i].title +"* \n"
+   };
+   str = str + "`check also` <http://api-topics.tk>"
+  resolve(str);
+})});
+< object
+
+
+
+
+
+
++ show me * posts for * api
+- <call> ShowPosts<star1> <star2> </call>
+> object ShowPosts javascript
+const request = require('request');
+//var payload = {"query":{"bool":{"must":[ {"match":{"topic":args[1]}}, {"match":{"api":args[0]}}]}}};
+return new Promise(function(resolve,reject){
+request('http://jsonplaceholder.typicode.com/todos', { json: true }, (err, res, body) => {
+  if (err) { reject(err); }
+  let str = "- here are some results:\n";
+  var i =0
+  for (i = 0; i < body.length; i ++){
+   str = str +"*"+ body[i].title +"* \n"
+   };
+   str = str + "`check also` <http://api-topics.tk>"
+  resolve(str);
+})});
+< object
+
